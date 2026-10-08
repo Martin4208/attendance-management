@@ -18,7 +18,10 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
     if plan is None:
         raise HTTPException(status_code=500, detail="Internal server error")
     
-    tenant = Tenant(name=payload.tenant_name, plan_id=plan.id)
+    tenant = Tenant(
+        name=payload.tenant_name, 
+        plan_id=plan.id
+    )
     user = User(
         name=payload.user_name, 
         email=payload.email.lower(), 
@@ -79,6 +82,6 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     return LoginResponse(access_token=token, token_type="bearer")
 
 
-@router.post("/me", response_model=MeResponse)
+@router.get("/me", response_model=MeResponse)
 def me(current_user: User = Depends(get_current_user)):
     return current_user

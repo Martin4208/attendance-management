@@ -1,7 +1,6 @@
+import jwt
 import uuid
 from datetime import datetime, timedelta, timezone
-
-import jwt
 
 from app.config import settings
 from tests.helpers import create_tenant_user
@@ -15,7 +14,7 @@ def test_member_can_list_own_tenant_members(client):
     tenant_id, token = create_tenant_user(client, "test@email.com", "string")
     
     # メンバー一覧取得
-    res = client.get( f"/tenants/{tenant_id}/members", headers={"Authorization": f"Bearer {token}"} )
+    res = client.get( f"/tenants/{tenant_id}/members", headers=auth(token) )
     
     assert res.status_code == 200
     members = res.json()
